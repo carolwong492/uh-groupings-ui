@@ -17,7 +17,7 @@ public class PasswordScanner {
     private static final Log logger = LogFactory.getLog(ErrorRestController.class);
 
     @PostConstruct
-    public void init() throws PasswordFoundException {
+    public void init() throws PasswordFoundException { // to edit
         logger.info("init; starting...");
         checkForPasswords();
         logger.info("init; check for passwords finished.");
