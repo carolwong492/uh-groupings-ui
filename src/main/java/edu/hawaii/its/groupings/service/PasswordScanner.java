@@ -8,13 +8,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 
-import edu.hawaii.its.groupings.controller.ErrorRestController;
 import edu.hawaii.its.groupings.exceptions.PasswordFoundException;
 
 @Service
 public class PasswordScanner {
 
-    private static final Log logger = LogFactory.getLog(ErrorRestController.class);
+    private static final Log logger = LogFactory.getLog(PasswordScanner.class);
 
     @PostConstruct
     public void init() throws PasswordFoundException { // to edit
@@ -25,7 +24,7 @@ public class PasswordScanner {
     }
 
     private void checkForPasswords() throws PasswordFoundException {
-        CheckForPattern checkForPattern = new CheckForPattern();
+        CheckForPwdPattern checkForPattern = new CheckForPwdPattern();
 
         String patternResult = "";
         String pattern = "^.*password.*\\=(?!\\s*$).+";
