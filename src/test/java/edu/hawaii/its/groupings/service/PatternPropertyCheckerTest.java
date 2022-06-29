@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -18,14 +19,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class PatternPropertyCheckerTest {
 
     PatternPropertyChecker patternPropertyChecker;
-    String pattern;
     String dirname;
+
+//    @Value("${pattern.property.checker.pattern:^.*password.*\\\\=(?!\\\\s*$).+}")
+//    private String pattern;
+
+    String pattern = "^.*password.*\\=(?!\\s*$).+";
 
     @Before
     public void setUp() {
         patternPropertyChecker = new PatternPropertyChecker();
-        pattern = "^.*password.*\\=(?!\\s*$).+";
-        dirname = "src/test/resources/PatternPropertyCheckerTestFiles";
+        patternPropertyChecker.setPattern(pattern);
+        dirname = "src/test/resources/pattern-property-checker";
     }
 
     @Test
@@ -51,17 +56,18 @@ public class PatternPropertyCheckerTest {
         List<String> fileLocations = patternPropertyChecker.fileLocations(".properties", dirname + "/test1");
         assertEquals(1, fileLocations.size());
         assertTrue(fileLocations.contains(
-                "src/test/resources/PatternPropertyCheckerTestFiles/test1/PatternPropertyCheckerTestFile.properties on line: 2"));
+                "src/test/resources/pattern-property-checker/test1/PatternPropertyCheckerTestFile.properties on line: 2"));
     }
 
+    // test that it can find two instances of pattern in the same file (looks in test2 folder)
     @Test
     public void testTwoPatternSameFile() {
         List<String> fileLocations = patternPropertyChecker.fileLocations(".properties", dirname + "/test2");
         assertEquals(2, fileLocations.size());
         assertTrue(fileLocations.contains(
-                "src/test/resources/PatternPropertyCheckerTestFiles/test2/PatternPropertyCheckerTestFile2.properties on line: 2"));
+                "src/test/resources/pattern-property-checker/test2/PatternPropertyCheckerTestFile2.properties on line: 2"));
         assertTrue(fileLocations.contains(
-                "src/test/resources/PatternPropertyCheckerTestFiles/test2/PatternPropertyCheckerTestFile2.properties on line: 5"));
+                "src/test/resources/pattern-property-checker/test2/PatternPropertyCheckerTestFile2.properties on line: 5"));
     }
 
     @Test
@@ -69,9 +75,9 @@ public class PatternPropertyCheckerTest {
         List<String> fileLocations = patternPropertyChecker.fileLocations(".txt", dirname + "/test1");
         assertEquals(2, fileLocations.size());
         assertTrue(fileLocations.contains(
-                "src/test/resources/PatternPropertyCheckerTestFiles/test1/PatternPropertyCheckerTwoPatterns.txt on line: 1"));
+                "src/test/resources/pattern-property-checker/test1/PatternPropertyCheckerTwoPatterns.txt on line: 1"));
         assertTrue(fileLocations.contains(
-                "src/test/resources/PatternPropertyCheckerTestFiles/test1/PatternPropertyCheckerTwoPatterns2.txt on line: 3"));
+                "src/test/resources/pattern-property-checker/test1/PatternPropertyCheckerTwoPatterns2.txt on line: 3"));
     }
 
 }
