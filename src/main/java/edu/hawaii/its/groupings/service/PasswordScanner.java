@@ -27,9 +27,8 @@ public class PasswordScanner {
         PatternPropertyChecker checkForPattern = new PatternPropertyChecker();
 
         String patternResult = "";
-        String pattern = "^.*password.*\\=(?!\\s*$).+";
         String dirname = "src/main/resources";
-        List<String> fileLocations = checkForPattern.fileLocations(".properties", dirname, pattern);
+        List<String> fileLocations = checkForPattern.fileLocations(".properties", dirname);
         if (fileLocations != null && !fileLocations.isEmpty()) {
             for (String list : fileLocations) {
                 patternResult += "\n" + list;

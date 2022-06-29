@@ -14,6 +14,8 @@ public class PatternPropertyChecker {
 
     private static final Log logger = LogFactory.getLog(PatternPropertyChecker.class);
 
+    private static final String pattern = "^.*password.*\\=(?!\\s*$).+";
+
     /**
      * checkPattern: checks a file(s) and given file naming convention(.properties, .java, .pom)
      * for a pattern.
@@ -22,12 +24,10 @@ public class PatternPropertyChecker {
      *            The file type(.java, .properties, .pom, etc).
      * @param folderLocation
      *            The folder location(/src/main/resources).
-     * @param pattern
-     *            The string pattern to look for in the source code.
      *
      * @return A list of strings containing locations of the found patterns.
      */
-    public List<String> fileLocations(String fileExtension, String folderLocation, String pattern) {
+    public List<String> fileLocations(String fileExtension, String folderLocation) {
 
         logger.info("fileLocations;  fileExtension: " + fileExtension);
         logger.info("fileLocations; folderLocation: " + folderLocation);
