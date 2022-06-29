@@ -10,9 +10,9 @@ import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class CheckForPwdPattern {
+public class PatternPropertyChecker {
 
-    private static final Log logger = LogFactory.getLog(CheckForPwdPattern.class);
+    private static final Log logger = LogFactory.getLog(PatternPropertyChecker.class);
 
     /**
      * checkPattern: checks a file(s) and given file naming convention(.properties, .java, .pom)

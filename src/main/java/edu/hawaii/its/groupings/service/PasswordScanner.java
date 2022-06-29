@@ -24,7 +24,7 @@ public class PasswordScanner {
     }
 
     private void checkForPasswords() throws PasswordFoundException {
-        CheckForPwdPattern checkForPattern = new CheckForPwdPattern();
+        PatternPropertyChecker checkForPattern = new PatternPropertyChecker();
 
         String patternResult = "";
         String pattern = "^.*password.*\\=(?!\\s*$).+";
