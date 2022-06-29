@@ -11,6 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -31,6 +32,12 @@ public class PatternPropertyCheckerTest {
         patternPropertyChecker = new PatternPropertyChecker();
         patternPropertyChecker.setPattern(pattern);
         dirname = "src/test/resources/pattern-property-checker";
+    }
+
+    @Test
+    public void testNullParam() {
+        List<String> fileLocations = patternPropertyChecker.fileLocations(null, null);
+        assertTrue(fileLocations.size() == 0);
     }
 
     @Test

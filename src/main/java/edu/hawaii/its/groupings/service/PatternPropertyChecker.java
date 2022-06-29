@@ -41,7 +41,7 @@ public class PatternPropertyChecker {
         logger.info("fileLocations; folderLocation: " + folderLocation);
         logger.info("fileLocations;        pattern: " + this.pattern);
 
-        List<String> patternLocation = new ArrayList<>();
+        List<String> patternLocation = new ArrayList<>();;
 
         try {
             File dir = new File(folderLocation);
@@ -80,7 +80,6 @@ public class PatternPropertyChecker {
         } catch (Exception e) {
             logger.error("Error: ", e);
         }
-
         return patternLocation;
     }
 }
