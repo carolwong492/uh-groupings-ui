@@ -77,8 +77,8 @@ public class PatternPropertyCheckerTest {
     public void testTwoPatternDiffFile() {
         List<String> fileLocations = patternPropertyChecker.getPatternLocation(dirname + "/test1", ".txt");
         assertEquals(2, fileLocations.size());
-        assertTrue(fileLocations.get(0).contains(" on line: 3"));
-        assertTrue(fileLocations.get(1).contains(" on line: 1"));
+        assertTrue(fileLocations.get(0).contains(" on line: 1") || fileLocations.get(0).contains(" on line: 3"));
+        assertTrue(fileLocations.get(1).contains(" on line: 1") || fileLocations.get(1).contains(" on line: 3"));
     }
 
     @Test
