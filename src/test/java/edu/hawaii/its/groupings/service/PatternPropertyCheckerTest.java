@@ -1,26 +1,29 @@
 package edu.hawaii.its.groupings.service;
 
-import org.junit.Test;
-import org.junit.Before;
-import org.junit.runner.RunWith;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.endsWith;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
-import static org.junit.Assert.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 public class PatternPropertyCheckerTest {
 
     private PatternPropertyChecker patternPropertyChecker;
-    private String dirname = "src/test/resources/pattern-property-checker";
+    private Path resourceDir = Paths.get("src", "test", "resources", "pattern-property-checker");
+    private String dirname = resourceDir.toString();
 
     @Before
     public void setUp() {
@@ -55,24 +58,29 @@ public class PatternPropertyCheckerTest {
     public void testOnePatternFound() {
         List<String> fileLocations = patternPropertyChecker.getPatternLocation(dirname + "/test1", ".properties");
         assertEquals(1, fileLocations.size());
+        Path path = Paths.get(resourceDir.toString(), "test1", "PatternPropertyCheckerTestFile.properties");
         assertTrue(fileLocations.contains(dirname + "/test1/PatternPropertyCheckerTestFile.properties on line: 2"));
+        assertThat(fileLocations.get(0), endsWith(path.toString() + " on line: 2"));
     }
 
-    // test that it can find two instances of pattern in the same file (looks in test2 folder)
     @Test
     public void testTwoPatternSameFile() {
-        List<String> fileLocations = patternPropertyChecker.getPatternLocation(dirname + "/test2", ".properties");
+        // Two instances of pattern in the same file (looks in test2 folder).
+        String dirname = Paths.get(resourceDir.toString(), "test2").toString();
+        List<String> fileLocations = patternPropertyChecker.getPatternLocation(dirname, ".properties");
         assertEquals(2, fileLocations.size());
-        assertTrue(fileLocations.contains(dirname + "/test2/PatternPropertyCheckerTestFile2.properties on line: 2"));
-        assertTrue(fileLocations.contains(dirname + "/test2/PatternPropertyCheckerTestFile2.properties on line: 5"));
+        Path path = Paths.get(resourceDir.toString(), "test2", "PatternPropertyCheckerTestFile2.properties");
+
+        assertThat(fileLocations.get(0), endsWith(path.toString() + " on line: 2"));
+        assertThat(fileLocations.get(1), endsWith(path.toString() + " on line: 5"));
     }
 
     @Test
     public void testTwoPatternDiffFile() {
         List<String> fileLocations = patternPropertyChecker.getPatternLocation(dirname + "/test1", ".txt");
         assertEquals(2, fileLocations.size());
-        assertTrue(fileLocations.contains(dirname + "/test1/PatternPropertyCheckerTwoPatterns.txt on line: 1"));
-        assertTrue(fileLocations.contains(dirname + "/test1/PatternPropertyCheckerTwoPatterns2.txt on line: 3"));
+        assertThat(fileLocations.get(0), endsWith(dirname + "/test1/PatternPropertyCheckerTwoPatterns2.txt on line: 3"));
+        assertThat(fileLocations.get(1), endsWith(dirname + "/test1/PatternPropertyCheckerTwoPatterns.txt on line: 1"));
     }
 
     @Test
