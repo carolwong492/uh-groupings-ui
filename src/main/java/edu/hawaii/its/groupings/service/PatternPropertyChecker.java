@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -72,6 +73,6 @@ public class PatternPropertyChecker {
         } catch (Exception e) {
             logger.error("Error: ", e);
         }
-        return patternLocation;
+        return patternLocation.stream().sorted().collect(Collectors.toList());
     }
 }

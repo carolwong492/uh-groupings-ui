@@ -8,16 +8,12 @@ import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 public class PatternPropertyCheckerTest {
 
@@ -25,7 +21,7 @@ public class PatternPropertyCheckerTest {
     private Path resourceDir = Paths.get("src", "test", "resources", "pattern-property-checker");
     private String dirname = resourceDir.toString();
 
-    @Before
+    @BeforeEach
     public void setUp() {
         patternPropertyChecker = new PatternPropertyChecker();
     }
@@ -77,7 +73,6 @@ public class PatternPropertyCheckerTest {
     public void testTwoPatternDiffFile() {
         String dirname = Paths.get(resourceDir.toString(), "test1").toString();
         List<String> fileLocations = patternPropertyChecker.getPatternLocation(dirname, ".txt");
-        Collections.sort(fileLocations);
         assertEquals(2, fileLocations.size());
         Path path1 = Paths.get(resourceDir.toString(), "test1", "PatternPropertyCheckerTwoPatterns.txt");
         Path path2 = Paths.get(resourceDir.toString(), "test1", "PatternPropertyCheckerTwoPatterns2.txt");
