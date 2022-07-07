@@ -3,12 +3,12 @@ package edu.hawaii.its.groupings.service;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.endsWith;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Before;
@@ -64,15 +64,26 @@ public class PatternPropertyCheckerTest {
     }
 
     @Test
+    public void testTwoPatternSameFile() {
+        String dirname = Paths.get(resourceDir.toString(), "test2").toString();
+        List<String> fileLocations = patternPropertyChecker.getPatternLocation(dirname, ".properties");
+        assertEquals(2, fileLocations.size());
+        Path path = Paths.get(resourceDir.toString(), "test2", "PatternPropertyCheckerTestFile2.properties");
+        assertThat(fileLocations.get(0), endsWith(path.toString() + " on line: 2"));
+        assertThat(fileLocations.get(1), endsWith(path.toString() + " on line: 5"));
+    }
+
+    @Test
     public void testTwoPatternDiffFile() {
         String dirname = Paths.get(resourceDir.toString(), "test1").toString();
         List<String> fileLocations = patternPropertyChecker.getPatternLocation(dirname, ".txt");
+        Collections.sort(fileLocations);
         assertEquals(2, fileLocations.size());
         Path path1 = Paths.get(resourceDir.toString(), "test1", "PatternPropertyCheckerTwoPatterns.txt");
         Path path2 = Paths.get(resourceDir.toString(), "test1", "PatternPropertyCheckerTwoPatterns2.txt");
 
-        assertThat(fileLocations.get(0), endsWith(path2.toString() + " on line: 3"));
-        assertThat(fileLocations.get(1), endsWith(path1.toString() + " on line: 1"));
+        assertThat(fileLocations.get(0), endsWith(path1.toString() + " on line: 1"));
+        assertThat(fileLocations.get(1), endsWith(path2.toString() + " on line: 3"));
     }
 
     @Test
