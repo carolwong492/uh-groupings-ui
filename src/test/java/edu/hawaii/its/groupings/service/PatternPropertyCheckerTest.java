@@ -33,52 +33,46 @@ public class PatternPropertyCheckerTest {
     @Test
     public void testNullParam() {
         List<String> fileLocations = patternPropertyChecker.getPatternLocation(null, null);
-        assertTrue(fileLocations.size() == 0);
+        assertEquals(0, fileLocations.size());
     }
 
     @Test
     public void testNoPattern() {
         List<String> fileLocations = patternPropertyChecker.getPatternLocation(dirname + "/test2", ".txt");
-        assertTrue(fileLocations.size() == 0);
+        assertEquals(0, fileLocations.size());
     }
 
     @Test
     public void testNoFile() {
         List<String> fileLocations = patternPropertyChecker.getPatternLocation(dirname, ".properties");
-        assertTrue(fileLocations.size() == 0);
+        assertEquals(0, fileLocations.size());
     }
 
     @Test
     public void testEmptyFile() {
         List<String> fileLocations = patternPropertyChecker.getPatternLocation(dirname, ".txt");
-        assertTrue(fileLocations.size() == 0);
+        assertEquals(0, fileLocations.size());
     }
 
     @Test
     public void testOnePatternFound() {
-        List<String> fileLocations = patternPropertyChecker.getPatternLocation(dirname + "/test1", ".properties");
-        assertEquals(1, fileLocations.size());
-        assertTrue(fileLocations.get(0).contains(" on line: 2"));
-    }
-
-    @Test
-    public void testTwoPatternSameFile() {
-        // Two instances of pattern in the same file (looks in test2 folder).
-        String dirname = Paths.get(resourceDir.toString(), "test2").toString();
+        String dirname = Paths.get(resourceDir.toString(), "test1").toString();
         List<String> fileLocations = patternPropertyChecker.getPatternLocation(dirname, ".properties");
-        assertEquals(2, fileLocations.size());
-        Path path = Paths.get(resourceDir.toString(), "test2", "PatternPropertyCheckerTestFile2.properties");
-
+        assertEquals(1, fileLocations.size());
+        Path path = Paths.get(resourceDir.toString(), "test1", "PatternPropertyCheckerTestFile.properties");
         assertThat(fileLocations.get(0), endsWith(path.toString() + " on line: 2"));
-        assertThat(fileLocations.get(1), endsWith(path.toString() + " on line: 5"));
     }
 
     @Test
     public void testTwoPatternDiffFile() {
-        List<String> fileLocations = patternPropertyChecker.getPatternLocation(dirname + "/test1", ".txt");
+        String dirname = Paths.get(resourceDir.toString(), "test1").toString();
+        List<String> fileLocations = patternPropertyChecker.getPatternLocation(dirname, ".txt");
         assertEquals(2, fileLocations.size());
-        assertTrue(fileLocations.get(0).contains(" on line: 1") || fileLocations.get(0).contains(" on line: 3"));
-        assertTrue(fileLocations.get(1).contains(" on line: 1") || fileLocations.get(1).contains(" on line: 3"));
+        Path path1 = Paths.get(resourceDir.toString(), "test1", "PatternPropertyCheckerTwoPatterns.txt");
+        Path path2 = Paths.get(resourceDir.toString(), "test1", "PatternPropertyCheckerTwoPatterns2.txt");
+
+        assertThat(fileLocations.get(0), endsWith(path2.toString() + " on line: 3"));
+        assertThat(fileLocations.get(1), endsWith(path1.toString() + " on line: 1"));
     }
 
     @Test
