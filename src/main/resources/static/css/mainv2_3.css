@@ -379,53 +379,16 @@ h4 {
     height: 44px;
 }
 
-.nav-pills .nav-link.active,
-.nav-pills .show > .nav-link {
-    background: white;
-    color: #004252;
-}
-
 .nav-pills .nav-link.active {
     position: relative;
-    background-color: #fff;
+    background-color: white;
 }
 
-.nav-pills .nav-link.active::after {
-    content: "";
-    border-color: var(--teal);
-    border-style: solid;
-    width: 0;
-    height: 0;
-    position: absolute;
-}
-
-@media screen and (max-width: 767.9px) {
-    .nav-pills .nav-link.active::after {
-        border-width: 0 10px 10px 10px;
-        border-color: transparent transparent #fff transparent;
-        bottom: -16px;
-        left: 33%;
-    }
-}
-
-@media screen and (min-width: 768px) {
-    .nav-pills .nav-link.active::after {
+@media (min-width: 768px) {
+    .nav-pills .nav-link.active:after {
         border-width: 10px 10px 10px 0;
         border-color: transparent #fff transparent transparent;
         top: 25%;
-        right: -35px;
-    }
-}
-
-@media screen and (min-width: 992px) {
-    .nav-pills .nav-link.active::after {
-        right: -18px;
-    }
-}
-
-@media (min-width: 1200px) {
-    .nav-pills .nav-link.active::after {
-        right: -24px;
     }
 }
 
@@ -707,7 +670,7 @@ label input {
 }
 
 .basis-column {
-    width: 10%;
+    width: 3%;
 }
 
 .add-margin {
