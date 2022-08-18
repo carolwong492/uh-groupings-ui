@@ -382,6 +382,8 @@ h4 {
 .nav-pills .nav-link.active {
     position: relative;
     background-color: white;
+    background: white;
+    color: #004252;
 }
 
 @media (min-width: 768px) {
