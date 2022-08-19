@@ -92,6 +92,12 @@
     color: $dark-teal;
 }
 
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+    background: white;
+    color: #004252;
+}
+
 .nav-pills {
     // Set icon styling for nav-bar icons.
     .nav-link {
@@ -105,17 +111,34 @@
             color: $dark-teal;
 
             &:after {
-                @include media-breakpoint(min-tablet) {
-                    border-width: 10px 10px 10px 0;
-                    border-color: transparent #fff transparent transparent;
-                    top: 25%;
+                content: "";
+                border-color: $dark-teal;
+                border-style: solid;
+                width: 0;
+                height: 0;
+                position: absolute;
+
+                @include media-breakpoint(max-landscape-phone) {
+                        border-width: 0 10px 10px 10px;
+                        border-color: transparent transparent #fff transparent;
+                        bottom: -16px;
+                        left: 33%;
                 }
-                //content: "";
-                //border-color: $dark-teal;
-                //border-style: solid;
-                //width: 0;
-                //height: 0;
-                //position: absolute;
+
+                @include media-breakpoint(min-tablet) {
+                        border-width: 10px 10px 10px 0;
+                        border-color: transparent #fff transparent transparent;
+                        top: 25%;
+                        right: -35px;
+                }
+
+                @include media-breakpoint(min-desktop) {
+                        right: -18px;
+                }
+
+                @include media-breakpoint(min-large-desktop) {
+                        right: -24px;
+                }
             }
         }
     }
