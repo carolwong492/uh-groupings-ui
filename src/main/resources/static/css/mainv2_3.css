@@ -1,5 +1,4 @@
-/* DO NOT TOUCH THIS CSS FILE.
-EDIT SCSS FILES INSTEAD AND RUN mvn clean sass:update-stylesheets TO UPDATE CSS */
+/* DO NOT TOUCH THIS CSS FILE */
 .text-primary {
   color: #004252 !important;
 }
@@ -704,7 +703,8 @@ label input {
 }
 
 .basis-column {
-  width: 10%;
+  width: 3%;
+  padding-left: 20px;
 }
 
 .add-margin {
