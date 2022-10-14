@@ -619,7 +619,7 @@
             } else {
                 let numMembers = ($scope.manageMembers.split(" ").length - 1);
                 if (numMembers > 0) {
-                    let users = $scope.parseAddRemoveInputStr($scope.manageMembers);
+                    let users = $scope.manageMembers.split(/[ ,]+/).join(",");
                     $scope.manageMembers = [];
                     if (numMembers > $scope.maxImport) {
                         $scope.launchDynamicModal(
@@ -699,20 +699,25 @@
 
         $scope.successfulAddHandler = function (res, list, listName) {
             let membersNotInList = [];
+            let arrayOfMembers = list.split(",");
             $scope.waitingForImportResponse = false; /* Small spinner off. */
 
-            for (let data of res) {
-                let result = data.result;
-                let userWasAdded = data.userWasAdded;
+            let data = res;
+            for (let i = 0; i < res.length; i++) {
+                data[parseInt(i, 10)] = res[parseInt(i, 10)];
+            }
+            for (let i = 0; i < data.length; i++) {
+                let result = data[parseInt(i, 10)].result;
+                let userWasAdded = data[parseInt(i, 10)].userWasAdded;
 
-                if (result === "FAILURE" || !userWasAdded) {
-                    membersNotInList.push(data.name);
+                if ("FAILURE" === result || !userWasAdded) {
+                    membersNotInList.push(arrayOfMembers[i]);
                     $scope.membersNotInList = membersNotInList.join(", ");
                 } else {
                     let person = {
-                        "uid": data.uid,
-                        "uhUuid": data.uhUuid,
-                        "name": data.name
+                        "uid": data[parseInt(i, 10)].uid,
+                        "uhUuid": data[parseInt(i, 10)].uhUuid,
+                        "name": data[parseInt(i, 10)].name
                     };
                     $scope.multiAddResults.push(person);
                     $scope.multiAddResultsGeneric.push(person);
@@ -754,7 +759,10 @@
             }
         };
 
-        // Small function that resets the checkboxes on the page
+        /**
+         * Helper - clearMemberInput
+         * Small function that resets the checkboxes on the page
+         */
         function resetCheckboxes() {
             for (let member of Object.values($scope.membersInCheckboxList)) {
                 member = false;
@@ -908,6 +916,7 @@
         };
 
         /**
+         * Helper - validateAndAddUser
          * Add a user to a group.
          * @param {Object} list - the list the user is being added to (either Include or Exclude)
          */
@@ -940,8 +949,7 @@
         $scope.updateAddMember = function (userToAdd, list) {
             // only initialize groupingPath if listName is not "admins"
             let groupingPath;
-            const sanitizedUser = $scope.sanitizer([userToAdd]).split();
-
+            const sanitizedUser = $scope.sanitizer([userToAdd]);
             if ($scope.listName !== "admins") {
                 groupingPath = $scope.selectedGrouping.path;
             }
@@ -966,6 +974,7 @@
         };
 
         /**
+         * Helper - addMember
          * @param {string} user - the user you are checking to see if they are in another list.
          * @param {Object} list - the list the user is currently being added to
          * @returns {boolean} - true if the person is already in another list, else false.
@@ -982,6 +991,7 @@
         };
 
         /**
+         * Helper - addMember
          * @param {string} user - the user you are checking to see if they are already in the list being added to
          * @param {Object} list - the list the user is currently being added to
          * @returns {boolean} true if the user is already in the list being added to, otherwise returns false
@@ -1289,13 +1299,13 @@
                 pageItems = $scope.pagedItemsInclude;
                 pageNumber = $scope.currentPageInclude;
             }
-
             for (let i = 0; i < pageItems[pageNumber].length; i++) {
                 $scope.membersInCheckboxList[((pageItems[pageNumber][i]).uhUuid)] = $scope.allSelected;
             }
         };
 
         /**
+         * Helper - prepBatchRemove
          * Take in a list of booleans and return a comma separated string containing the identifiers of all true booleans.
          * @param obj: {obj1: true, obj2: false, obj3: true}
          * @returns {string}: "obj1,obj3"
@@ -1310,13 +1320,13 @@
         };
 
         /**
-         *  Divides a string into an array where commas and spaces are present.
+         *  Replace commas and spaces in str with commas.
          */
         $scope.parseAddRemoveInputStr = function (str) {
             if (!_.isString(str)) {
                 return "";
             }
-            return str.split(/[ ,]+/);
+            return str.split(/[ ,]+/).join(",");
         };
 
         /**
@@ -1357,8 +1367,9 @@
                 default:
                     break;
             }
+            let arrayOfMembers = members.split(",");
             let membersNotInList = [];
-            for (let member of members) {
+            for (let member of arrayOfMembers) {
                 let currentMember = returnMemberObjectFromUserIdentifier(member, listToSearch);
                 if (_.isUndefined(currentMember)) {
                     membersNotInList.push(member);
@@ -1381,7 +1392,8 @@
         }
 
         /**
-         * Takes the string of member UH numbers created from 'prepMultiRemove' and provides it
+         * Helper - prepBatchRemove
+         * Takes the string of member UH numbers created from 'prepBatchRemove' and provides it
          * to the endpoint to perform the batch removal.
          * @param membersToRemove - Comma separated string of members to remove from the list.
          * @param listName - Name of list to remove the members from.
@@ -1446,12 +1458,14 @@
                 $scope.listName = listName;
                 $scope.currentPage = currentPage;
                 let membersToRemove = $scope.parseAddRemoveInputStr($scope.membersToModify);
+                let numMembersToRemove = membersToRemove.split(",").length;
                 $scope.membersToModify = [];
-                if (membersToRemove.length > 1) {
+                if (numMembersToRemove > 1) {
+                    membersToRemove = $scope.parseAddRemoveInputStr(membersToRemove);
                     removeMembers(membersToRemove, listName);
                 } else {
-                    $scope.userInput = membersToRemove[0];
-                    $scope.memberToRemove = returnMemberObjectFromUserIdentifier(membersToRemove[0], currentPage);
+                    $scope.userInput = membersToRemove;
+                    $scope.memberToRemove = returnMemberObjectFromUserIdentifier(membersToRemove, currentPage);
                     if (listName === "owners" && $scope.groupingOwners.length === 1) {
                         const userType = "owner";
                         $scope.createRemoveErrorModal(userType);
@@ -1526,8 +1540,9 @@
          * Remove a grouping owner. There must be at least one grouping owner remaining.
          * @param {number} currentPage - the current page in the owners table
          * @param {number} index - the index of the owner clicked by the user
+         * @param {object} options - the object
          */
-        $scope.removeOwner = function (currentPage, index) {
+        $scope.removeOwner = function (currentPage, index, options) {
             const ownerToRemove = $scope.pagedItemsOwners[currentPage][index];
 
             if ($scope.groupingOwners.length > 1) {
@@ -1618,7 +1633,7 @@
                 $scope.removeInputError = true;
             } else {
                 const userToRemove = options.user.uhUuid;
-                const sanitizedUserToRemove = $scope.sanitizer([userToRemove]).split();
+                const sanitizedUserToRemove = $scope.sanitizer([userToRemove]);
                 $scope.userToRemove = options.user;
                 $scope.listName = options.listName;
 
@@ -1732,6 +1747,7 @@
         };
 
         /**
+         * Helper - resetGroupingInformation
          * Reset the grouping members and page numbers.
          */
         function resetGroupingMembers() {
@@ -1757,6 +1773,9 @@
             $scope.currentPagePerson = 0;
         }
 
+        /**
+         * Helper - resetGroupingInformation
+         */
         function resetFilterQueries() {
             $scope.basisQuery = "";
             $scope.excludeQuery = "";
@@ -1851,7 +1870,7 @@
 
             $scope.resetModalInstance = $uibModal.open({
                 templateUrl: "modal/resetModal",
-                windowClass,
+                windowClass: windowClass,
                 scope: $scope,
                 backdrop: "static",
                 keyboard: false
@@ -1874,8 +1893,8 @@
             } else {
                 inBool = true;
                 $scope.resetInclude = [];
-                for (let includedGrouping of $scope.groupingInclude) {
-                    $scope.resetInclude.push(includedGrouping.uhUuid);
+                for (let i = 0; i < $scope.groupingInclude.length; i++) {
+                    $scope.resetInclude.push($scope.groupingInclude[i].uhUuid);
                 }
             }
             if (Object.entries($scope.groupingExclude).length === 0 || $scope.excludeCheck === false) {
@@ -1947,7 +1966,11 @@
          * @return {Boolean} Sync Dest value at the given name
          */
         $scope.getSyncDestValueInArray = function (syncDestName) {
-            return $scope.syncDestArray.find((element) => element.name === syncDestName).synced;
+
+            const indexOfSyncDest = $scope.syncDestArray.map((e) => {
+                return e.name;
+            }).indexOf(syncDestName);
+            return $scope.syncDestArray[indexOfSyncDest].synced;
         };
 
         /**
@@ -1956,7 +1979,10 @@
          * @return {Object} The entire syncDest object with the given name
          */
         $scope.getEntireSyncDestInArray = function (syncDestName) {
-            return $scope.syncDestArray.find((element) => element.name === syncDestName);
+            const indexOfSyncDest = $scope.syncDestArray.map((e) => {
+                return e.name;
+            }).indexOf(syncDestName);
+            return $scope.syncDestArray[indexOfSyncDest];
         };
 
         /**
@@ -1965,10 +1991,14 @@
          * @param {Boolean} syncDestvalue The value to set the Sync Dest to
          */
         $scope.setSyncDestInArray = function (syncDestName, syncDestvalue) {
-            $scope.syncDestArray.find((element) => element.name === syncDestName).synced = syncDestvalue;
+            const indexOfSyncDest = $scope.syncDestArray.map((e) => {
+                return e.name;
+            }).indexOf(syncDestName);
+            $scope.syncDestArray[indexOfSyncDest].synced = syncDestvalue;
         };
 
         /**
+         * Helper - createSyncDestModal
          * Toggle the grouping sync destinations according to a given syncDest
          * @param {String} syncDestName Name of the Sync Dest to toggle
          */
@@ -2165,6 +2195,7 @@
         };
 
         /**
+         * Helper - exportGroupToCSV
          * Converts the data in the table into comma-separated values.
          * @param {object[]} table - the table to convert
          * @returns string table in CSV format
