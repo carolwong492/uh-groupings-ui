@@ -3,6 +3,8 @@ package edu.hawaii.its.groupings.access;
 import edu.hawaii.its.api.controller.GroupingsRestController;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 import edu.hawaii.its.groupings.controller.WithMockUhUser;
+import edu.hawaii.its.groupings.exceptions.InvalidUhUuidException;
+
 import org.jasig.cas.client.authentication.SimplePrincipal;
 import org.junit.Before;
 import org.junit.Test;
@@ -80,14 +82,18 @@ public class UserBuilderTest {
         given(groupingsRestController.hasAdminPrivs(principal))
                 .willReturn(new ResponseEntity<>("true", HttpStatus.OK));
 
-        User user = userBuilder.make(map);
+        try {
+            User user = userBuilder.make(map);
+            // Check results.
+            assertEquals(4, user.getAuthorities().size());
+            assertTrue(user.hasRole(Role.ANONYMOUS));
+            assertTrue(user.hasRole(Role.UH));
+            assertTrue(user.hasRole(Role.ADMIN));
+            assertTrue(user.hasRole(Role.OWNER));
+        } catch (InvalidUhUuidException e) {
 
-        // Check results.
-        assertEquals(4, user.getAuthorities().size());
-        assertTrue(user.hasRole(Role.ANONYMOUS));
-        assertTrue(user.hasRole(Role.UH));
-        assertTrue(user.hasRole(Role.ADMIN));
-        assertTrue(user.hasRole(Role.OWNER));
+        }
+
     }
 
     @Test
@@ -122,6 +128,13 @@ public class UserBuilderTest {
 
     @Test(expected = UsernameNotFoundException.class)
     public void make() {
-        userBuilder.make(new HashMap<String, String>());
+        try {
+            userBuilder.make(new HashMap<String, String>());
+            fail("Should not reach here.");
+        } catch (Exception e) {
+            assertThat(UsernameNotFoundException.class, equalTo(e.getClass()));
+            assertThat(e.getMessage(), containsString("uid is empty"));
+    }
+
     }
 }

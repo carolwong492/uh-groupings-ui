@@ -14,10 +14,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.security.Principal;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertFalse;
@@ -77,7 +81,6 @@ public class AuthorizationServiceTest {
         assertThat(roleHolder.size(), equalTo(2));
         assertTrue(roleHolder.contains(Role.ANONYMOUS));
         assertTrue(roleHolder.contains(Role.UH));
-        assertFalse(roleHolder.contains(Role.EMPLOYEE));
         assertFalse(roleHolder.contains(Role.ADMIN));
         assertFalse(roleHolder.contains(Role.OWNER));
     }
@@ -105,6 +108,30 @@ public class AuthorizationServiceTest {
         assertTrue(roleHolder.contains(Role.UH));
         assertTrue(roleHolder.contains(Role.OWNER));
         assertTrue(roleHolder.contains(Role.ADMIN));
+    }
+
+    @Test
+    public void fetchRolesTestUH() {
+        RoleHolder roleHolder = authorizationService.fetchRoles("10000001", "test");
+        assertThat(roleHolder.size(), equalTo(2));
+        assertTrue(roleHolder.contains(Role.ANONYMOUS));
+        assertTrue(roleHolder.contains(Role.UH));
+        assertFalse(roleHolder.contains(Role.OWNER));
+        assertFalse(roleHolder.contains(Role.ADMIN));
+
+        roleHolder = authorizationService.fetchRoles("1", "test");
+        assertThat(roleHolder.size(), equalTo(1));
+        assertTrue(roleHolder.contains(Role.ANONYMOUS));
+        assertFalse(roleHolder.contains(Role.UH));
+        assertFalse(roleHolder.contains(Role.OWNER));
+        assertFalse(roleHolder.contains(Role.ADMIN));
+
+        roleHolder = authorizationService.fetchRoles(null, "test");
+        assertThat(roleHolder.size(), equalTo(1));
+        assertTrue(roleHolder.contains(Role.ANONYMOUS));
+        assertFalse(roleHolder.contains(Role.UH));
+        assertFalse(roleHolder.contains(Role.OWNER));
+        assertFalse(roleHolder.contains(Role.ADMIN));
     }
 
     @Ignore

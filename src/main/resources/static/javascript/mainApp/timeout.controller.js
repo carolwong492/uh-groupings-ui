@@ -76,6 +76,7 @@
             });
 
             // If user clicks, reset timeout
+
             $(this).click(function (e) {
                 if (!isModalOpen) {
                     $timeout.cancel(createTimeoutModalPromise);

@@ -2249,6 +2249,5 @@
         };
     }
 
-
     UHGroupingsApp.controller("GeneralJsController", GeneralJsController);
 }());

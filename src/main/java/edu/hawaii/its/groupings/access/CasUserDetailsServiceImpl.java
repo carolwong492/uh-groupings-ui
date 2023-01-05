@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Map;
 
+import edu.hawaii.its.groupings.exceptions.InvalidUhUuidException;
+
 public class CasUserDetailsServiceImpl extends AbstractCasAssertionUserDetailsService {
 
     private static final Log logger = LogFactory.getLog(CasUserDetailsServiceImpl.class);
@@ -21,7 +23,7 @@ public class CasUserDetailsServiceImpl extends AbstractCasAssertionUserDetailsSe
     }
 
     @Override
-    protected UserDetails loadUserDetails(Assertion assertion) {
+    protected UserDetails loadUserDetails(Assertion assertion) throws InvalidUhUuidException{
         if (assertion.getPrincipal() == null) {
             // Not sure this is possible.
             throw new UsernameNotFoundException("principal is null");

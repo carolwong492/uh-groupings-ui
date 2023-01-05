@@ -18,6 +18,7 @@
 <script type="text/javascript" th:src="@{/javascript/mainApp/general.controller.js}"></script>
 <script type="text/javascript" th:src="@{/javascript/mainApp/membership.controller.js}"></script>
 <script type="text/javascript" th:src="@{/javascript/mainApp/timeout.controller.js}"></script>
+<!--<script type="text/javascript" th:src="@{/javascript/mainApp/test.controller.js}"></script>-->
 <script type="text/javascript" th:src="@{/javascript/mainApp/owner.controller.js}"></script>
 <script type="text/javascript" th:src="@{/javascript/mainApp/table.controller.js}"></script>
 
@@ -34,8 +35,7 @@
         </div>
     </div>
     <div sec:authorize="isAuthenticated()">
-        <div ng-controller="TimeoutJsController">
-        </div>
+        <div ng-controller="TimeoutJsController"></div>
     </div>
 </footer>
 </html>

@@ -1,11 +1,18 @@
 package edu.hawaii.its.groupings.access;
 
+import edu.hawaii.its.groupings.controller.ErrorControllerAdvice;
+import edu.hawaii.its.groupings.controller.ErrorRestController;
+import edu.hawaii.its.groupings.controller.HomeController;
+import edu.hawaii.its.groupings.exceptions.InvalidUhUuidException;
 import edu.hawaii.its.groupings.util.Strings;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.error.ErrorAttributes;
+import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Map;
 
@@ -17,11 +24,21 @@ public final class UserBuilder {
     @Autowired
     private AuthorizationService authorizationService;
 
-    public final User make(Map<String, ?> map) {
+    @Autowired
+    private ErrorRestController errorRestController;
+
+    @Autowired
+    private ErrorControllerAdvice errorControllerAdvice;
+
+    @Autowired
+    private HomeController homeController;
+
+    public final User make(Map<String, ?> map) throws InvalidUhUuidException{
         return make(new UhCasAttributes(map));
     }
 
-    public final User make(UhAttributes attributes) {
+    @RequestMapping("/uhUuidError")
+    public final User make(UhAttributes attributes) throws InvalidUhUuidException {
 
         String uid = attributes.getUid();
         if (Strings.isEmpty(uid)) {
@@ -48,6 +65,13 @@ public final class UserBuilder {
         // object just for the demonstration.
         // Above is what might commonly occur.
         user.setAttributes(attributes);
+
+        if (!roleHolder.contains(Role.UH)) {
+//            errorRestController.uhUuidError();
+            homeController.home();
+//            errorControllerAdvice.handleInvalidUhUuidException(new InvalidUhUuidException("message"));
+////            throw new InvalidUhUuidException(uhUuid);
+        }
 
         return user;
     }

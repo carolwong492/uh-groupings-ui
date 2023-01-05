@@ -183,6 +183,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/groupings/**").hasAnyRole("ADMIN", "OWNER")
                 .antMatchers("/memberships/**").hasRole("UH")
                 .antMatchers("/modal/apiError").permitAll()
+                .antMatchers("/uhUuidError").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(casAuthenticationFilter())

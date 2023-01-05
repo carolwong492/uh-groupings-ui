@@ -4,6 +4,7 @@ import edu.hawaii.its.api.type.GroupingsHTTPException;
 import edu.hawaii.its.api.type.GroupingsServiceResultException;
 import edu.hawaii.its.groupings.access.User;
 import edu.hawaii.its.groupings.access.UserContextService;
+import edu.hawaii.its.groupings.exceptions.InvalidUhUuidException;
 import edu.hawaii.its.groupings.service.EmailService;
 
 import edu.internet2.middleware.grouperClient.ws.GcWebServiceError;
@@ -14,7 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
@@ -71,6 +76,29 @@ public class ErrorControllerAdvice {
     public ResponseEntity<GroupingsHTTPException> handleUnsupportedOperationException(UnsupportedOperationException nie) {
         emailService.sendWithStack(nie, "Unsupported Operation Exception");
       return exceptionResponse("Method not implemented", nie, 501);
+    }
+
+//    @ExceptionHandler(InvalidUhUuidException.class)
+//    @PostMapping("/info")
+//    public String handleInvalidUhUuidException(Exception ex) {
+//        //        String username = null;
+//        //        User user = userContextService.getCurrentUser();
+//        //        if (user != null) {
+//        //            username = user.getUsername();
+//        //        }
+//        //        logger.error("username: " + username + "; Exception: ", ex);
+//        System.out.println("first");
+//        //        emailService.sendWithStack(ex, "InvalidUhUuidException");
+//        return "redirect:/info";
+//    }
+
+    @ExceptionHandler(InvalidUhUuidException.class)
+//    @GetMapping("/uhUuidError")
+    public String handleInvalidUhUuidException(Exception ex) {
+//        ModelAndView mav = new ModelAndView();
+//        mav.setViewName("/uhUuidError");
+        System.out.println("IN errorcontrolleradvice");
+        return "redirect:/uhUuidError";
     }
 
     //todo this is for the HolidayRestControllerTest test (should we really have this behavior?)

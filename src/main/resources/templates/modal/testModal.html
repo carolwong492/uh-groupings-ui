@@ -1,0 +1,17 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en">
+
+<div class="modal-header">
+    <h5 class="modal-title" id="modal-title">Error</h5>
+</div>
+<div class="modal-body" id="modal-body">
+    <p> You have logged in with an account that does not have a proper UH Number. Please use another account.</p>
+</div>
+<div class="modal-footer">
+       <form action="/logout" th:action="@{/logout}" method="post">
+           <button class="btn btn-primary" type="submit">Logout</button>
+       </form>
+</div>
+</html>

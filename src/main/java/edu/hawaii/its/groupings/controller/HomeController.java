@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
@@ -47,6 +48,12 @@ public class HomeController {
     @GetMapping(value = "/404")
     public String invalid() {
         return "redirect:/";
+    }
+
+    @GetMapping(value = "/uhUuidError")
+    public String uhUuidError() {
+        logger.info("IN HOME CONTROLLER");
+        return "uhUuidError";
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -224,5 +231,10 @@ public class HomeController {
     @GetMapping(value = "/modal/multiRemoveResultModal")
     public String multiRemoveConfirmationModal() {
         return "modal/multiRemoveResultModal";
+    }
+
+    @GetMapping(value = "/modal/testModal")
+    public static String testModal() {
+        return "modal/testModal";
     }
 }
