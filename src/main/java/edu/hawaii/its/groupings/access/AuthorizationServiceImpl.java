@@ -36,17 +36,17 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
         //Determine if uhUuid is valid
         if (uhUuidCheckerService.isValidUhUuid(uhUuid, uid)) {
-//            roleHolder.add(Role.UH);
+            roleHolder.add(Role.UH);
         }
 
         //Determine if user is an owner.
         if (checkResult(groupingsRestController.hasOwnerPrivs(principal))) {
-//            roleHolder.add(Role.OWNER);
+            roleHolder.add(Role.OWNER);
         }
 
         //Determine if a user is an admin.
         if (checkResult(groupingsRestController.hasAdminPrivs(principal))) {
-//            roleHolder.add(Role.ADMIN);
+            roleHolder.add(Role.ADMIN);
         }
 
         logger.info("fetchRoles: username: " + uid + " " + roleHolder.getAuthorities() + ";");

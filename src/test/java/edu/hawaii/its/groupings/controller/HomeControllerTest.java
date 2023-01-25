@@ -2,6 +2,7 @@ package edu.hawaii.its.groupings.controller;
 
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 import edu.hawaii.its.groupings.type.Feedback;
+import edu.hawaii.its.groupings.util.Strings;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -122,6 +123,19 @@ public class HomeControllerTest {
                 .andExpect(view().name("home"))
                 .andReturn();
         assertNotNull(mvcResult);
+    }
+
+    @Test
+    public void requestUhuuiderror() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/uhuuiderror"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("uhuuiderror"))
+                .andReturn();
+        assertNotNull(mvcResult);
+        String content = mvcResult.getResponse().getContentAsString();
+        System.out.println(Strings.fill('v', 99));
+        System.out.println(content);
+        System.out.println(Strings.fill('^', 99));
     }
 
     @Test

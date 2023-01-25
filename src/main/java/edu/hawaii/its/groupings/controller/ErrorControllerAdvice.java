@@ -90,7 +90,7 @@ public class ErrorControllerAdvice {
     @ExceptionHandler(InvalidUhUuidException.class)
     public String handleInvalidUhUuidException(Exception ex) {
         System.out.println("IN errorcontrolleradvice");
-        return "redirect:/uhUuidError";
+        return "redirect:/uhuuiderror";
     }
 
     private ResponseEntity<GroupingsHTTPException> exceptionResponse(String message, Throwable cause, int status) {

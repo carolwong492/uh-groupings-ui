@@ -22,7 +22,7 @@ public final class UserBuilder {
         return make(new UhCasAttributes(map));
     }
 
-    public final User make(UhAttributes attributes) throws InvalidUhUuidException {
+    public final User make(UhAttributes attributes) {
 
         String uid = attributes.getUid();
         if (Strings.isEmpty(uid)) {

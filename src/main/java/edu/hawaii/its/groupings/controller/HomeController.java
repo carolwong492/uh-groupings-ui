@@ -49,10 +49,10 @@ public class HomeController {
         return "redirect:/";
     }
 
-    @GetMapping(value = "/uhUuidError")
+    @GetMapping(value = "/uhuuiderror")
     public String uhUuidError() {
-        logger.info("User at uhUuidError.");
-        return "uhUuidError";
+        logger.info("User at uhuuiderror.");
+        return "uhuuiderror";
     }
 
     @PreAuthorize("hasRole('ADMIN')")
