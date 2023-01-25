@@ -36,7 +36,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
         //Determine if uhUuid is valid
         if (uhUuidCheckerService.isValidUhUuid(uhUuid, uid)) {
-            roleHolder.add(Role.UH);
+//            roleHolder.add(Role.UH);
         }
 
         //Determine if user is an owner.

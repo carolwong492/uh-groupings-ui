@@ -49,6 +49,12 @@ public class HomeController {
         return "redirect:/";
     }
 
+    @GetMapping(value = "/uhUuidError")
+    public String uhUuidError() {
+        logger.info("User at uhUuidError.");
+        return "uhUuidError";
+    }
+
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "/admin")
     public String admin() {

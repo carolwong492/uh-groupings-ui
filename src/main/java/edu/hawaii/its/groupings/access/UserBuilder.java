@@ -1,5 +1,6 @@
 package edu.hawaii.its.groupings.access;
 
+import edu.hawaii.its.groupings.exceptions.InvalidUhUuidException;
 import edu.hawaii.its.groupings.util.Strings;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,7 +22,7 @@ public final class UserBuilder {
         return make(new UhCasAttributes(map));
     }
 
-    public final User make(UhAttributes attributes) {
+    public final User make(UhAttributes attributes) throws InvalidUhUuidException {
 
         String uid = attributes.getUid();
         if (Strings.isEmpty(uid)) {
@@ -48,6 +49,10 @@ public final class UserBuilder {
         // object just for the demonstration.
         // Above is what might commonly occur.
         user.setAttributes(attributes);
+
+        if (!roleHolder.contains(Role.UH)) {
+            throw new InvalidUhUuidException("message here");
+        }
 
         return user;
     }

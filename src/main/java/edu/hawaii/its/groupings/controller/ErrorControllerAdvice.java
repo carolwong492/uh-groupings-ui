@@ -4,6 +4,7 @@ import edu.hawaii.its.api.type.GroupingsHTTPException;
 import edu.hawaii.its.api.type.GroupingsServiceResultException;
 import edu.hawaii.its.groupings.access.User;
 import edu.hawaii.its.groupings.access.UserContextService;
+import edu.hawaii.its.groupings.exceptions.InvalidUhUuidException;
 import edu.hawaii.its.groupings.service.EmailService;
 
 import edu.internet2.middleware.grouperClient.ws.GcWebServiceError;
@@ -84,6 +85,12 @@ public class ErrorControllerAdvice {
         logger.error("username: " + username + "; Exception: ", ex);
         emailService.sendWithStack(ex, "TypeMismatchException");
         return "redirect:/error";
+    }
+
+    @ExceptionHandler(InvalidUhUuidException.class)
+    public String handleInvalidUhUuidException(Exception ex) {
+        System.out.println("IN errorcontrolleradvice");
+        return "redirect:/uhUuidError";
     }
 
     private ResponseEntity<GroupingsHTTPException> exceptionResponse(String message, Throwable cause, int status) {
