@@ -126,32 +126,34 @@
 
         angular.extend(this, $controller("TableJsController", { $scope }));
 
-        /**
-         * Get the username of the current user
-         */
-        groupingsService.getCurrentUser((res) => {
-            $scope.currentUser = {
-                uid: res.data.username,
-                uhUuid: res.data.uhUuid
-            };
-        });
+        $scope.init = function () {
+            /**
+             * Get the username of the current user
+             */
+            groupingsService.getCurrentUser((res) => {
+                $scope.currentUser = {
+                    uid: res.data.username,
+                    uhUuid: res.data.uhUuid
+                };
+            });
 
-        /**
-         * Get the number of memberships that the current user is associated with.
-         */
-        groupingsService.getNumberOfMemberships((res) => {
-                $scope.numberOfMemberships = res;
-            }, (res) => {
-            }
-        );
+            /**
+             * Get the number of memberships that the current user is associated with.
+             */
+            groupingsService.getNumberOfMemberships((res) => {
+                    $scope.numberOfMemberships = res;
+                }, (res) => {
+                }
+            );
 
-        /**
-         * Get the number of groupings that the current user is associated with.
-         */
-        groupingsService.getNumberOfGroupings((res) => {
-                $scope.numberOfGroupings = res;
-            }
-        );
+            /**
+             * Get the number of groupings that the current user is associated with.
+             */
+            groupingsService.getNumberOfGroupings((res) => {
+                    $scope.numberOfGroupings = res;
+                }
+            );
+        };
 
         /**
          * Initiates the retrieval of information about the grouping clicked by the user.
